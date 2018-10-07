@@ -43,7 +43,7 @@ int main (int argc, char **argv) {
     FILE *fp = fopen("pi.txt", "w");
     if (fp != NULL)
     {
-        fputs(str_pi, fp);
+        fputs(pi_str, fp);
         fclose(fp);
     }
 
