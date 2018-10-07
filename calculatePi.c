@@ -8,7 +8,7 @@
 
 #include"calculatePi.h"
 
-unsigned long PRECISION = 1000000;
+unsigned long PRECISION = 10000000;
 mpfr_t PI, one;
 mpfr_t t1, t2, t3, t4, t5, t6, t7;
 int id[] = {0, 1, 2, 3, 4, 5, 6};
@@ -24,14 +24,14 @@ int main (int argc, char **argv) {
     mpfr_set_ui(PI, 0, MPFR_RNDN);
     mpfr_set_ui(one, 1, MPFR_RNDN);
 
-    pthread_mutex_init(&sum_mutex, NULL);
+    pthread_mutex_init(&lock, NULL);
 
     pthread_t threads[7];
 
     t_start = time(NULL);
 
     for (int i = 0; i < 7; i++) {
-      pthread_create(&threads[i], NULL, &calculate_correct_Term, (void*)&id[i])
+      pthread_create(&threads[i], NULL, calculate_correct_Term, (void*)&id[i]);
     }
 
     for(int i=0; i<7; i++) {
@@ -51,6 +51,10 @@ int main (int argc, char **argv) {
     mpfr_sprintf(pi_str, "%.*R*f", PRECISION, MPFR_RNDN, PI);
 
     printf("Finished after : %ld seconds\n", (t_end - t_start));
+
+    mpfr_clears(PI, one, NULL);
+    mpfr_free_cache();
+
     FILE *fp = fopen("pi.txt", "w");
     if (fp != NULL)
     {
@@ -75,16 +79,17 @@ void calc(mpfr_t* t, char* x_str, int op, int coeff) {
     } else {
       mpfr_sub(PI, PI, *t, MPFR_RNDN);
     }
-    pthread_mutex_lock(&lock);
+    pthread_mutex_unlock(&lock);
 
     mpfr_clears(*t, x, NULL);
     mpfr_free_cache();
+    pthread_exit(NULL);
 }
 
-void calculate_correct_Term (int id) {
+void* calculate_correct_Term (void* id) {
   char x_str[22];
 
-  switch (id) {
+  switch (*(int *)id) {
     case 0:
           sprintf(x_str, "239");
           calc(&t1, x_str, 1, 183);
