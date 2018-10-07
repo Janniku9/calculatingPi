@@ -1,10 +1,10 @@
 CC = gcc
 
 calculatePi: calculatePi.c
-	$(CC) -o calculatePi calculatePi.c -lgmp -lmpfr
+	$(CC) -o calculatePi calculatePi.c -lgmp -lmpfr -pthread
 
 calculatePiFast: calculatePi.c
-	$(CC) -o calculatePiFast calculatePi.c -O3 -lgmp -lmpfr
+	$(CC) -O3 -o calculatePiFast calculatePi.c -lgmp -lmpfr -pthread
 
-calculatePiFaste: calculatePi.c
-	$(CC) -o calculatePiFaster calculatePi.c -Ofast -lgmp -lmpfr
+calculatePiFaster: calculatePi.c
+	$(CC) -Ofast -o calculatePiFaster calculatePi.c -lgmp -lmpfr -pthread
