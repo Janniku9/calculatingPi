@@ -16,8 +16,7 @@ time_t t_start, t_end;
 
 int main (int argc, char **argv) {
 
-    PRECISION *= 3.35;
-    mpfr_set_default_prec(PRECISION);
+    mpfr_set_default_prec(PRECISION*3.35);
     mpfr_inits(t1, t2, t3, t4, t5, t6, t7, PI, one, NULL);
     mpfr_set_ui(PI, 0, MPFR_RNDN);
     mpfr_set_ui(one, 1, MPFR_RNDN);
@@ -26,12 +25,24 @@ int main (int argc, char **argv) {
       calculate_correct_Term (i);
     }
 
+    mpfr_mul_ui(PI, PI, 4, MPFR_RNDN);
+
+    char *pi_str = malloc(PRECISION+1);
+    if(pi_str == NULL) {
+        printf("Not enough memory to store PI");
+        return 1;
+    }
+
+    mpfr_sprintf(pi_str, "%.*R*f", PRECISION, MPFR_RNDN, PI);
+
+    printf("%s\n", pi_str);
+
     return (0);
 }
 
 void calc(mpfr_t* t, char* x_str, int op, int coeff) {
     mpfr_t x;
-    mpfr_set_default_prec(PRECISION);
+    mpfr_set_default_prec(PRECISION * 3.35);
     mpfr_init_set_str(x, x_str, 10, MPFR_RNDN);
 
     mpfr_atan2(*t, one, x, MPFR_RNDN);
