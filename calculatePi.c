@@ -8,7 +8,7 @@
 
 #include"calculatePi.h"
 
-unsigned long PRECISION = 100;
+unsigned long PRECISION = 1000000;
 mpfr_t PI, one;
 mpfr_t t1, t2, t3, t4, t5, t6, t7;
 
@@ -39,7 +39,7 @@ int main (int argc, char **argv) {
 
     mpfr_sprintf(pi_str, "%.*R*f", PRECISION, MPFR_RNDN, PI);
 
-    printf("Finished after : %sms\n", (t_end - t_start));
+    printf("Finished after : %ldms\n", (t_end - t_start));
     printf("%s\n", pi_str);
 
     return (0);
