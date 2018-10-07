@@ -3,6 +3,7 @@
 #include<time.h>
 #include<string.h>
 
+#include"gmp.h"
 #include"mpfr.h"
 #include<pthread.h>
 
