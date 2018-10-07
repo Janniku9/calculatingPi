@@ -20,7 +20,3 @@ int main (int argc, char **argv) {
     mpfr_set_ui(one, 1, MPFR_RNDN);
     return (0);
 }
-
-
-
-}
