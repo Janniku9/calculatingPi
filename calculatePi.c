@@ -39,7 +39,7 @@ int main (int argc, char **argv) {
 
     mpfr_sprintf(pi_str, "%.*R*f", PRECISION, MPFR_RNDN, PI);
 
-    printf("Finished after : %ldms\n", (t_end - t_start));
+    printf("Finished after : %ld seconds\n", (t_end - t_start));
     FILE *fp = fopen("pi.txt", "w");
     if (fp != NULL)
     {
