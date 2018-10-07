@@ -21,9 +21,13 @@ int main (int argc, char **argv) {
     mpfr_set_ui(PI, 0, MPFR_RNDN);
     mpfr_set_ui(one, 1, MPFR_RNDN);
 
+    t_start = time(NULL);
+
     for (size_t i = 0; i < 7; i++) {
       calculate_correct_Term (i);
     }
+
+    t_end = time(NULL);
 
     mpfr_mul_ui(PI, PI, 4, MPFR_RNDN);
 
@@ -35,6 +39,7 @@ int main (int argc, char **argv) {
 
     mpfr_sprintf(pi_str, "%.*R*f", PRECISION, MPFR_RNDN, PI);
 
+    printf("Finished after : %sms\n", (t_end - t_start));
     printf("%s\n", pi_str);
 
     return (0);
