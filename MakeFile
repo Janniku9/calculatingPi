@@ -1,0 +1,10 @@
+CC=gcc
+
+calculatePi: calcualtePi.c
+	$(CC) -o calculatePi calculatePi.c
+
+calculatePiFast: calcualtePi.c
+		$(CC) -o calculatePiFast calculatePi.c -O3
+
+calculatePiFaster: calcualtePi.c
+			$(CC) -o calculatePiFaster calculatePi.c -Ofast
