@@ -11,8 +11,11 @@
 unsigned long PRECISION = 1000000;
 mpfr_t PI, one;
 mpfr_t t1, t2, t3, t4, t5, t6, t7;
+int id[] = {0, 1, 2, 3, 4, 5, 6};
 
 time_t t_start, t_end;
+
+pthread_mutex_t lock;
 
 int main (int argc, char **argv) {
 
@@ -21,10 +24,18 @@ int main (int argc, char **argv) {
     mpfr_set_ui(PI, 0, MPFR_RNDN);
     mpfr_set_ui(one, 1, MPFR_RNDN);
 
+    pthread_mutex_init(&sum_mutex, NULL);
+
+    pthread_t threads[7];
+
     t_start = time(NULL);
 
-    for (size_t i = 0; i < 7; i++) {
-      calculate_correct_Term (i);
+    for (int i = 0; i < 7; i++) {
+      pthread_create(&threads[i], NULL, &calculate_correct_Term, (void*)&id[i])
+    }
+
+    for(int i=0; i<7; i++) {
+      pthread_join(threads[i], NULL);
     }
 
     t_end = time(NULL);
@@ -58,11 +69,13 @@ void calc(mpfr_t* t, char* x_str, int op, int coeff) {
     mpfr_atan2(*t, one, x, MPFR_RNDN);
     mpfr_mul_ui(*t, *t, coeff, MPFR_RNDN);
 
+    pthread_mutex_lock(&lock);
     if (op == 1) {
       mpfr_add(PI, PI, *t, MPFR_RNDN);
     } else {
       mpfr_sub(PI, PI, *t, MPFR_RNDN);
     }
+    pthread_mutex_lock(&lock);
 
     mpfr_clears(*t, x, NULL);
     mpfr_free_cache();
