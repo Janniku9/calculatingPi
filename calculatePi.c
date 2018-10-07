@@ -16,7 +16,7 @@ int main (int argc, char **argv) {
     PRECISION *= 3.35;
     mpfr_set_default_prec(PRECISION);
     mpfr_inits(PI, one, NULL);
-    mpfr_set_ui(pi, 0, MPFR_RNDN);
+    mpfr_set_ui(PI, 0, MPFR_RNDN);
     mpfr_set_ui(one, 1, MPFR_RNDN);
     return (0);
 }
