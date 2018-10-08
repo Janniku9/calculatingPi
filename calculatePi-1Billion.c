@@ -7,7 +7,7 @@
 #include"mpfr.h"
 #include<pthread.h>
 
-#include"calculatePi.h"
+#include"calculatePi-1Billion.h"
 
 unsigned long long PRECISION = 1000000000;
 mpfr_t PI, one;
