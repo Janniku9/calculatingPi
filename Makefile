@@ -10,3 +10,6 @@ calculatePiFast: calculatePi.c
 
 calculatePiFaster: calculatePi.c
 	$(CC) -std=c99 -Ofast -o calculatePiFaster calculatePi.c -lgmp -lmpfr -pthread
+
+1billion: calculatePi-1Billion.c
+	$(CC) -std=c99 -O3 -o calculatePi-1Billion calculatePi-1Billion.c -lgmp -lmpfr -pthread
