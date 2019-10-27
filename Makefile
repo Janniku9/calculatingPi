@@ -10,3 +10,6 @@ calculatePiFast: calculatePi.c
 
 calculatePiO3: calculatePi.c
 	$(CC) -std=c99 -Ofast -o calculatePiO3 calculatePi.c -lgmp -lmpfr -pthread
+
+compare: fileComparator.c
+	$(CC) -std=c99 -O3 -o compare fileComparator.c
