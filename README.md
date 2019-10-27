@@ -12,12 +12,19 @@ programm that calculates digits of PI using the [mpfr library](https://www.mpfr.
 
 ## Usage
 
-compiles the code using no optimization, O3 or Ofast.
+compiles the code using no optimization, O3 or Ofast. Set Precision field and run code.
 
-```batch
+```bash
 make calculatePi
 make calculatePiO3
 make calculatePiFaster
+```
+
+compares 2 files, used for testing correctness
+```bash
+make compare
+
+./compare file1.txt file2.txt
 ```
 
 
