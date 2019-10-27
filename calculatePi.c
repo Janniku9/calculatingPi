@@ -9,7 +9,7 @@
 
 #include"calculatePi.h"
 
-unsigned long long PRECISION = 1000000000;
+unsigned long long PRECISION = 1000000000; // number of digits
 mpfr_t PI, one;
 mpfr_t t1, t2, t3, t4, t5, t6, t7;
 int id[] = {0, 1, 2, 3, 4, 5, 6};
@@ -20,35 +20,40 @@ pthread_mutex_t lock;
 
 int main (int argc, char **argv) {
 
+    // init mpfr
     mpfr_set_default_prec(PRECISION*3.35);
     mpfr_inits(t1, t2, t3, t4, t5, t6, t7, PI, one, NULL);
     mpfr_set_ui(PI, 0, MPFR_RNDN);
     mpfr_set_ui(one, 1, MPFR_RNDN);
-
+    
+    // create lock & thread array
     pthread_mutex_init(&lock, NULL);
-
     pthread_t threads[7];
-
     t_start = time(NULL);
 
+    // create & start threads
     for (int i = 0; i < 7; i++) {
       pthread_create(&threads[i], NULL, calculate_correct_Term, (void*)&id[i]);
     }
 
+    // join threads
     for(int i=0; i<7; i++) {
       pthread_join(threads[i], NULL);
     }
 
     t_end = time(NULL);
 
+    // multiply result=Pi/4 by 4 to get PI
     mpfr_mul_ui(PI, PI, 4, MPFR_RNDN);
 
+    // check for memory
     char *pi_str = malloc(PRECISION+1);
     if(pi_str == NULL) {
         printf("Not enough memory to store PI");
         return 1;
     }
 
+    // clean up mpfr
     mpfr_sprintf(pi_str, "%.*R*f", PRECISION, MPFR_RNDN, PI);
 
     printf("Finished after : %ld seconds\n", (t_end - t_start));
@@ -56,6 +61,7 @@ int main (int argc, char **argv) {
     mpfr_clears(PI, one, NULL);
     mpfr_free_cache();
 
+    // write res to file
     FILE *fp = fopen("pi.txt", "w");
     if (fp != NULL)
     {
@@ -66,6 +72,7 @@ int main (int argc, char **argv) {
     return (0);
 }
 
+// calculate digits
 void calc(mpfr_t* t, char* x_str, int op, int coeff) {
     mpfr_t x;
     mpfr_set_default_prec(PRECISION * 3.35);
@@ -74,6 +81,7 @@ void calc(mpfr_t* t, char* x_str, int op, int coeff) {
     mpfr_atan2(*t, one, x, MPFR_RNDN);
     mpfr_mul_ui(*t, *t, coeff, MPFR_RNDN);
 
+    // aquire lock to add or sub result
     pthread_mutex_lock(&lock);
     if (op == 1) {
       mpfr_add(PI, PI, *t, MPFR_RNDN);
@@ -82,11 +90,13 @@ void calc(mpfr_t* t, char* x_str, int op, int coeff) {
     }
     pthread_mutex_unlock(&lock);
 
+    // free memory
     mpfr_clears(*t, x, NULL);
     mpfr_free_cache();
     pthread_exit(NULL);
 }
 
+// constants for arctan terms
 void* calculate_correct_Term (void* id) {
   char x_str[22];
 
